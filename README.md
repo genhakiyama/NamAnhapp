@@ -55,36 +55,29 @@ npm run dev
 
 ---
 
-## ☁️ Hướng dẫn Deploy lên Cloudflare Pages (Miễn phí 100%)
+## ☁️ Deploy lên Cloudflare Workers (Miễn phí)
 
-Dự án đã được cấu hình sẵn **Cloudflare Pages Functions** (`functions/api/`), file định tuyến `_routes.json`, file cấu hình `_headers` và cơ chế lưu trữ bền vững (Local cache + Serverless API).
+Dự án dùng **Cloudflare Workers + Static Assets**:
+- `wrangler.toml`: cấu hình Worker `namanhapp`, phục vụ file tĩnh từ `client/dist`.
+- `worker/index.js`: xử lý `/api/config`, `/api/wishes`, `/api/upload`; các đường dẫn khác trả về React app.
 
-### Cách 1: Kết nối tự động qua GitHub (Khuyên dùng - Dễ nhất & Miễn phí)
+### Cách 1: Kết nối GitHub (tự deploy mỗi lần push)
 
-1. Đẩy code lên GitHub:
-   ```bash
-   git add .
-   git commit -m "feat: configure cloudflare pages deployment"
-   git push -u origin main
-   ```
-2. Truy cập [Cloudflare Dashboard](https://dash.cloudflare.com/) (đăng ký tài khoản miễn phí nếu chưa có).
-3. Vào mục **Workers & Pages** -> chọn **Create application** -> chọn thẻ **Pages** -> **Connect to Git**.
-4. Chọn repository **`NamAnhapp`** của bạn.
-5. Cài đặt thông số Build (Build settings):
-   - **Framework preset**: `Vite`
-   - **Build command**: `npm run build`
-   - **Build output directory**: `client/dist`
-   - **Root directory**: `/` (để trống hoặc điền `/`)
-6. Bấm **Save and Deploy**. Sau ~1 phút, bạn sẽ nhận được một địa chỉ web miễn phí dạng:  
-   👉 `https://namanh-app.pages.dev` (kèm chứng chỉ bảo mật HTTPS vĩnh viễn miễn phí, hỗ trợ gắn tên miền riêng miễn phí).
+Trong Cloudflare Dashboard → **Workers & Pages** → Worker `namanhapp` → **Settings** → **Build**:
+- **Build command**: `npm run build`
+- **Deploy command**: `npx wrangler deploy`
+- **Root directory**: `/` (để trống)
 
----
-
-### Cách 2: Deploy trực tiếp từ Terminal bằng Wrangler
-
-Nếu bạn muốn deploy ngay lập tức từ máy tính mà không cần qua GitHub:
+### Cách 2: Deploy từ Terminal
 ```bash
 npm run deploy
 ```
-*(Lần đầu chạy lệnh, terminal sẽ mở trình duyệt để bạn đăng nhập tài khoản Cloudflare, sau đó ứng dụng sẽ tự động tải lên và cấp link web ngay lập tức).*
+
+### (Tùy chọn) Lưu lời chúc vĩnh viễn bằng Workers KV
+Nếu không có KV, lời chúc và chỉnh sửa chỉ được lưu trong trình duyệt của từng người (localStorage).
+Để mọi khách mời cùng thấy lời chúc của nhau:
+```bash
+npx wrangler kv namespace create GRAD_KV
+```
+Sau đó bỏ comment khối `[[kv_namespaces]]` trong `wrangler.toml`, dán `id` vừa nhận rồi push lại.
 

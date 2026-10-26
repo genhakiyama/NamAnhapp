@@ -1,8 +1,19 @@
-name = "namanh-app"
-compatibility_date = "2026-10-27"
-pages_build_output_dir = "client/dist"
+# Cloudflare Workers config (Workers + Static Assets)
+# Tên phải trùng với tên Worker trên dashboard: "namanhapp"
+name = "namanhapp"
+main = "worker/index.js"
+compatibility_date = "2025-09-01"
 
-# Tùy chọn: Kết nối Cloudflare KV nếu bạn muốn lưu lời chúc vĩnh viễn trên Cloudflare
+[assets]
+directory = "./client/dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+# Cho phép Worker xử lý /api/* trước khi trả file tĩnh
+run_worker_first = ["/api/*"]
+
+# (Tùy chọn) Lưu lời chúc & cấu hình vĩnh viễn bằng Workers KV (free):
+#   1. npx wrangler kv namespace create GRAD_KV
+#   2. Bỏ comment 3 dòng dưới và dán id vừa nhận được
 # [[kv_namespaces]]
 # binding = "GRAD_KV"
 # id = "your-kv-namespace-id"
