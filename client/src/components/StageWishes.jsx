@@ -9,7 +9,8 @@ export default function StageWishes({
   isEditMode,
   onSendWish,
   onDeleteWish,
-  onPrev
+  onPrev,
+  onNext
 }) {
   const [name, setName] = useState('');
   const [text, setText] = useState('');
@@ -136,6 +137,11 @@ export default function StageWishes({
         <button className="btn btn-secondary" onClick={handlePrev} title="Quay lại">
           ‹
         </button>
+        {onNext && (
+          <button className="btn btn-primary" onClick={() => { soundFX.playChord(); onNext(); }}>
+            Tiếp ›
+          </button>
+        )}
       </div>
     </div>
   );

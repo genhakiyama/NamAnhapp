@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Chúc mừng Bonbon tốt nghiệp 🎓</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Pacifico&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="thiệp.css" />
+</head>
+<body>
+  <div class="bg-layer"></div>
+  <div class="blur-frame" aria-hidden="true"></div>
+
+  <div class="card-wrapper">
+    <main class="card" id="card">
+      <img src="images/ornament.png" alt="Hoa văn trang trí" class="sticker sticker-ornament" onerror="handleStickerError(this)" />
+      <img src="images/graduation-cap.png" alt="Mũ cử nhân và cuộn bằng" class="sticker sticker-cap" onerror="handleStickerError(this)" />
+
+      <div class="photo-circle">
+        <div class="photo-placeholder" id="photoPlaceholder">
+          <span class="placeholder-text">Hình chị ở đây</span>
+        </div>
+        <img src="images/photo.jpg" alt="Ảnh tốt nghiệp của Bonbon" id="bonbonPhoto" class="photo-img"
+          onload="handlePhotoLoad(this)" onerror="handlePhotoError(this)" />
+      </div>
+
+      <section class="content-block">
+        <div class="title-band">
+          <h1 class="card-title">
+            Chúc mừng Bonbon tốt nghiệp
+          </h1>
+        </div>
+
+        <div class="wishes">
+          <p class="wish-main">[VIẾT LỜI CHÚC CỦA TÔI VÀO ĐÂY]</p>
+          <p class="wish-sub">Ngày tốt nghiệp: [NGÀY/THÁNG/NĂM] • Trường: [TÊN TRƯỜNG]</p>
+        </div>
+      </section>
+
+      <img src="images/headphones.png" alt="Tai nghe" class="sticker sticker-headphones" onerror="handleStickerError(this)" />
+      <img src="images/notebook.png" alt="Quyển sổ và bút" class="sticker sticker-notebook" onerror="handleStickerError(this)" />
+    </main>
+  </div>
+
+  <script src="thiệp.js"></script>
+</body>
+</html>

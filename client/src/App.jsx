@@ -7,6 +7,7 @@ import StagePhoto from './components/StagePhoto';
 import StageThanks from './components/StageThanks';
 import StageInvite from './components/StageInvite';
 import StageWishes from './components/StageWishes';
+import StageLetter from './components/StageLetter';
 import EditModal from './components/EditModal';
 import { soundFX } from './utils/soundEffects';
 
@@ -18,7 +19,7 @@ const DEFAULT_CONFIG = {
     themeColor: '#e8619a',
     cardBgColor: 'rgba(255, 248, 243, 0.93)',
     textColor: '#5a2547',
-    customBgUrl: ''
+    customBgUrl: '/background.jpg'
   },
   stage0: {
     badgeText: 'Chúc mừng tốt nghiệp!',
@@ -140,7 +141,7 @@ export default function App() {
 
   const handleStageChange = (idx) => {
     soundFX.playButtonTap();
-    setCurStage(Math.max(0, Math.min(3, idx)));
+    setCurStage(Math.max(0, Math.min(4, idx)));
   };
 
   const handleSaveConfig = async (newConfig) => {
@@ -296,7 +297,7 @@ export default function App() {
 
       {/* Top Dot Navigation */}
       <nav id="nav">
-        {[0, 1, 2, 3].map((idx) => (
+        {[0, 1, 2, 3, 4].map((idx) => (
           <div
             key={idx}
             className={`dot ${curStage === idx ? 'on' : ''}`}
@@ -346,7 +347,13 @@ export default function App() {
           onSendWish={handleSendWish}
           onDeleteWish={handleDeleteWish}
           onPrev={() => handleStageChange(2)}
+          onNext={() => handleStageChange(4)}
         />
+      </section>
+
+      {/* Stage 4: Thư tâm sự */}
+      <section className={`stage ${curStage === 4 ? 'on' : ''}`}>
+        <StageLetter onPrev={() => handleStageChange(3)} />
       </section>
 
       {/* Live Customizer Modal */}

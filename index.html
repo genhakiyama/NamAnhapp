@@ -4,95 +4,72 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Chúc mừng Bonbon tốt nghiệp 🎓</title>
-  
-  <!-- Google Fonts: Dancing Script & Caveat (thư pháp / viết tay), Quicksand -->
+
+  <!-- Google Fonts: Dancing Script / Pacifico cho tiêu đề, Quicksand cho nội dung -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Pacifico&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- KHUNG BAO NGOÀI THIỆP -->
+  <!-- LỚP 1: NỀN (background.jpg phủ kín) -->
+  <div class="bg-layer"></div>
+
+  <!-- LỚP 2: KHUNG MỜ TRUNG TÂM -->
+  <div class="blur-frame" aria-hidden="true"></div>
+
+  <!-- BỌC CĂN GIỮA THIỆP -->
   <div class="card-wrapper">
-    
-    <!-- KHUNG THẺ CHÍNH (Nền trắng mờ mượt mà, bo góc nhẹ, không viền dày) -->
+    <!-- LỚP 3: NỘI DUNG THIỆP -->
     <main class="card" id="card">
-      
-      <!-- STICKER 1: Hoa văn trang trí vàng chạy ngang trên đỉnh khung -->
-      <img 
-        src="images/ornament.png" 
-        alt="Hoa văn trang trí vàng" 
-        class="sticker sticker-ornament" 
-        onerror="handleStickerError(this)" 
-      />
+      <!-- STICKER: Hoa văn phía trên khung -->
+      <img src="images/ornament.png" alt="Hoa văn trang trí" class="sticker sticker-ornament"
+        onerror="handleStickerError(this)" />
 
-      <!-- STICKER 2: Mũ cử nhân xanh + cuộn bằng ở góc trên bên trái -->
-      <img 
-        src="images/graduation-cap.png" 
-        alt="Mũ cử nhân và cuộn bằng" 
-        class="sticker sticker-cap" 
-        onerror="handleStickerError(this)" 
-      />
+      <!-- STICKER: Mũ cử nhân + cuộn bằng góc trên bên trái (hơi tràn) -->
+      <img src="images/graduation-cap.png" alt="Mũ cử nhân và cuộn bằng" class="sticker sticker-cap"
+        onerror="handleStickerError(this)" />
 
-      <!-- ===============================================================
-           HÌNH TRÒN CHỨA ẢNH (MÔ PHỎNG CHUẨN THEO ẢNH MẪU):
-           - KHÔNG có viền trắng, màu nền nâu hồng #c4897a
-           - Chữ "Hình chị ở đây" màu đen/charcoal ở giữa
-           - Gắn cứng đường dẫn images/photo.jpg. Khi có ảnh: cắt tròn lấp đầy, không méo
-           - Khi chưa có ảnh (404): tự động hiện placeholder
-           =============================================================== -->
-      <div class="photo-wrapper" id="photoWrapper">
-        
-        <!-- Placeholder màu nâu hồng (#c4897a) -->
+      <!-- HÌNH TRÒN CHỨA ẢNH -->
+      <div class="photo-circle">
+        <!-- Placeholder khi chưa có ảnh hoặc lỗi tải -->
         <div class="photo-placeholder" id="photoPlaceholder">
           <span class="placeholder-text">Hình chị ở đây</span>
         </div>
 
-        <!-- 
-          ĐƯỜNG DẪN ẢNH CHÂN DUNG CỐ ĐỊNH: images/photo.jpg
-          (Bạn chỉ cần đặt file ảnh của chị tên là photo.jpg vào thư mục images/)
-        -->
-        <img 
-          src="images/photo.jpg" 
-          alt="Ảnh tốt nghiệp của Bonbon" 
-          id="bonbonPhoto" 
-          class="photo-img" 
-          onload="handlePhotoLoad(this)" 
-          onerror="handlePhotoError(this)" 
-        />
+        <!-- ẢNH GẮN CỨNG TỪ images/photo.jpg -->
+        <img src="images/photo.jpg" alt="Ảnh tốt nghiệp của Bonbon" id="bonbonPhoto" class="photo-img"
+          onload="handlePhotoLoad(this)" onerror="handlePhotoError(this)" />
       </div>
 
-      <!-- ===============================================================
-           TIÊU ĐỀ 2 DÒNG THEO ĐÚNG THIẾT KẾ MẪU:
-           Dòng 1: "Chúc mừng Bonbon tốt"
-           Dòng 2: "nghiệp"
-           Chữ viết tay thư pháp mềm mại, gradient tím sang hồng san hô
-           =============================================================== -->
-      <header class="card-header">
-        <h1 class="card-title">
-          <span class="title-line title-line-1">Chúc mừng Bonbon tốt</span>
-          <span class="title-line title-line-2">nghiệp</span>
-        </h1>
-      </header>
+      <!-- TIÊU ĐỀ + LỜI CHÚC PHỤ -->
+      <section class="content-block">
+        <!-- Dải nền trắng mờ giúp tiêu đề đọc rõ trên nền chi tiết -->
+        <div class="title-band">
+          <h1 class="card-title">
+            Chúc mừng Bonbon tốt nghiệp
+          </h1>
+        </div>
 
-      <!-- STICKER 3: Tai nghe pastel ở góc dưới bên trái -->
-      <img 
-        src="images/headphones.png" 
-        alt="Tai nghe âm nhạc" 
-        class="sticker sticker-headphones" 
-        onerror="handleStickerError(this)" 
-      />
+        <!-- LỜI CHÚC PHỤ (dễ sửa) -->
+        <div class="wishes">
+          <!-- TODO: Thay lời chúc của bạn vào đây -->
+          <p class="wish-main">[VIẾT LỜI CHÚC CỦA TÔI VÀO ĐÂY]</p>
 
-      <!-- STICKER 4: Quyển sổ xanh có trái tim vàng + bút ở góc dưới bên phải -->
-      <img 
-        src="images/notebook.png" 
-        alt="Quyển sổ và bút" 
-        class="sticker sticker-notebook" 
-        onerror="handleStickerError(this)" 
-      />
+          <!-- TODO: Thay ngày tháng năm và tên trường vào đây -->
+          <p class="wish-sub">Ngày tốt nghiệp: [NGÀY/THÁNG/NĂM] • Trường: [TÊN TRƯỜNG]</p>
+        </div>
+      </section>
 
+      <!-- STICKER: Tai nghe góc dưới bên trái -->
+      <img src="images/headphones.png" alt="Tai nghe" class="sticker sticker-headphones"
+        onerror="handleStickerError(this)" />
+
+      <!-- STICKER: Quyển sổ + bút góc dưới bên phải -->
+      <img src="images/notebook.png" alt="Quyển sổ và bút" class="sticker sticker-notebook"
+        onerror="handleStickerError(this)" />
     </main>
   </div>
 
