@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Chúc mừng Bonbon tốt nghiệp 🎓</title>
+  
+  <!-- Google Fonts: Dancing Script & Caveat (thư pháp / viết tay), Quicksand -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- KHUNG BAO NGOÀI THIỆP -->
+  <div class="card-wrapper">
+    
+    <!-- KHUNG THẺ CHÍNH (Nền trắng mờ mượt mà, bo góc nhẹ, không viền dày) -->
+    <main class="card" id="card">
+      
+      <!-- STICKER 1: Hoa văn trang trí vàng chạy ngang trên đỉnh khung -->
+      <img 
+        src="images/ornament.png" 
+        alt="Hoa văn trang trí vàng" 
+        class="sticker sticker-ornament" 
+        onerror="handleStickerError(this)" 
+      />
+
+      <!-- STICKER 2: Mũ cử nhân xanh + cuộn bằng ở góc trên bên trái -->
+      <img 
+        src="images/graduation-cap.png" 
+        alt="Mũ cử nhân và cuộn bằng" 
+        class="sticker sticker-cap" 
+        onerror="handleStickerError(this)" 
+      />
+
+      <!-- ===============================================================
+           HÌNH TRÒN CHỨA ẢNH (MÔ PHỎNG CHUẨN THEO ẢNH MẪU):
+           - KHÔNG có viền trắng, màu nền nâu hồng #c4897a
+           - Chữ "Hình chị ở đây" màu đen/charcoal ở giữa
+           - Gắn cứng đường dẫn images/photo.jpg. Khi có ảnh: cắt tròn lấp đầy, không méo
+           - Khi chưa có ảnh (404): tự động hiện placeholder
+           =============================================================== -->
+      <div class="photo-wrapper" id="photoWrapper">
+        
+        <!-- Placeholder màu nâu hồng (#c4897a) -->
+        <div class="photo-placeholder" id="photoPlaceholder">
+          <span class="placeholder-text">Hình chị ở đây</span>
+        </div>
+
+        <!-- 
+          ĐƯỜNG DẪN ẢNH CHÂN DUNG CỐ ĐỊNH: images/photo.jpg
+          (Bạn chỉ cần đặt file ảnh của chị tên là photo.jpg vào thư mục images/)
+        -->
+        <img 
+          src="images/photo.jpg" 
+          alt="Ảnh tốt nghiệp của Bonbon" 
+          id="bonbonPhoto" 
+          class="photo-img" 
+          onload="handlePhotoLoad(this)" 
+          onerror="handlePhotoError(this)" 
+        />
+      </div>
+
+      <!-- ===============================================================
+           TIÊU ĐỀ 2 DÒNG THEO ĐÚNG THIẾT KẾ MẪU:
+           Dòng 1: "Chúc mừng Bonbon tốt"
+           Dòng 2: "nghiệp"
+           Chữ viết tay thư pháp mềm mại, gradient tím sang hồng san hô
+           =============================================================== -->
+      <header class="card-header">
+        <h1 class="card-title">
+          <span class="title-line title-line-1">Chúc mừng Bonbon tốt</span>
+          <span class="title-line title-line-2">nghiệp</span>
+        </h1>
+      </header>
+
+      <!-- STICKER 3: Tai nghe pastel ở góc dưới bên trái -->
+      <img 
+        src="images/headphones.png" 
+        alt="Tai nghe âm nhạc" 
+        class="sticker sticker-headphones" 
+        onerror="handleStickerError(this)" 
+      />
+
+      <!-- STICKER 4: Quyển sổ xanh có trái tim vàng + bút ở góc dưới bên phải -->
+      <img 
+        src="images/notebook.png" 
+        alt="Quyển sổ và bút" 
+        class="sticker sticker-notebook" 
+        onerror="handleStickerError(this)" 
+      />
+
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

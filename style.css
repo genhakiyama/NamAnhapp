@@ -1,0 +1,369 @@
+/* ==========================================================================
+   THIỆP CHÚC MỪNG TỐT NGHIỆP BONBON
+   Mô phỏng chuẩn 100% theo bản thiết kế mẫu (Canva mockup)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   BẢNG ĐIỀU KHIỂN BIẾN CSS (DỄ DÀNG TUỲ CHỈNH KÍCH THƯỚC & VỊ TRÍ)
+   -------------------------------------------------------------------------- */
+:root {
+  /* 1. HÌNH TRÒN CHỨA ẢNH CHÂN DUNG */
+  --photo-size: 275px;                /* Đường kính chuẩn hình tròn */
+  --photo-placeholder-bg: #c4897a;     /* Màu nâu hồng chuẩn theo thiết kế (#c4897a) */
+
+  /* 2. MŨ CỬ NHÂN XANH + CUỘN BẰNG (Góc trên bên trái) */
+  --cap-top: -46px;                   /* Nhô lên phía trên góc trái */
+  --cap-left: -52px;                  /* Chờm ra ngoài mép trái khung */
+  --cap-size: 150px;                  /* Kích thước sticker mũ */
+  --cap-rotate: -6deg;                /* Góc nghiêng sticker mũ */
+
+  /* 3. HOA VĂN TRANG TRÍ VÀNG (Chạy ngang trên đỉnh khung) */
+  --ornament-top: -36px;              /* Đặt ngay mép trên khung thẻ */
+  --ornament-left: 50%;               /* Căn giữa */
+  --ornament-size: 335px;             /* Chiều rộng hoa văn dài theo khung */
+
+  /* 4. TAI NGHE PASTEL (Góc dưới bên trái) */
+  --headphones-bottom: -18px;         /* Chờm nhẹ ra mép dưới khung */
+  --headphones-left: -24px;           /* Chờm ra mép trái */
+  --headphones-size: 105px;           /* Chiều rộng sticker tai nghe */
+  --headphones-rotate: 6deg;          /* Góc nghiêng tai nghe */
+
+  /* 5. QUYỂN SỔ XANH CÓ TRÁI TIM + BÚT (Góc dưới bên phải) */
+  --notebook-bottom: -22px;           /* Chờm nhẹ ra mép dưới khung */
+  --notebook-right: -24px;            /* Chờm ra mép phải */
+  --notebook-size: 120px;             /* Chiều rộng sticker quyển sổ */
+  --notebook-rotate: 8deg;            /* Góc nghiêng quyển sổ */
+
+  /* 6. KHUNG THẺ TRẮNG MỜ (CARD) */
+  --card-max-width: 420px;            /* Chiều rộng tối đa khung thiệp chuẩn tỉ lệ điện thoại */
+  --card-bg: rgba(255, 255, 255, 0.46); /* Nền trắng mờ mượt mà theo ảnh mẫu */
+  --card-radius: 24px;                /* Bo góc thẻ nhẹ nhàng */
+  --card-blur: 10px;                  /* Kính mờ tự nhiên (backdrop-filter) */
+}
+
+/* --------------------------------------------------------------------------
+   RESET CƠ BẢN
+   -------------------------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* --------------------------------------------------------------------------
+   1. NỀN TRANH SƠN DẦU PHONG CÁCH VAN GOGH
+   -------------------------------------------------------------------------- */
+body {
+  font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #3b1836;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 16px;
+  overflow-x: hidden;
+
+  /* Ảnh nền: images/background.jpg, background-size: cover, center */
+  background-color: #f7a8b8;
+  background-image: url('images/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* --------------------------------------------------------------------------
+   CONTAINER CĂN GIỮA VÀ BẢO ĐẢM TỈ LỆ THIỆP DỌC
+   -------------------------------------------------------------------------- */
+.card-wrapper {
+  width: 100%;
+  max-width: var(--card-max-width);
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+}
+
+/* --------------------------------------------------------------------------
+   2. KHUNG THẺ CHỮ NHẬT TRẮNG MỜ (CARD)
+   Không viền dày, bo góc nhẹ, kính mờ phẳng mịn theo thiết kế mẫu
+   -------------------------------------------------------------------------- */
+.card {
+  position: relative;
+  width: 100%;
+  background: var(--card-bg);
+  backdrop-filter: blur(var(--card-blur));
+  -webkit-backdrop-filter: blur(var(--card-blur));
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: var(--card-radius);
+  box-shadow: 0 10px 30px rgba(50, 20, 35, 0.1);
+  padding: 36px 18px 42px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* --------------------------------------------------------------------------
+   3. HÌNH TRÒN CHỨA ẢNH (CHUẨN 100% THEO ẢNH MẪU)
+   - KHÔNG có viền trắng (border: none)
+   - Nền màu nâu hồng (#c4897a)
+   - Chữ "Hình chị ở đây" màu đen/charcoal ở giữa
+   - Khi thay ảnh vào: cắt tròn lấp đầy, không méo, không có viền thừa
+   -------------------------------------------------------------------------- */
+.photo-wrapper {
+  position: relative;
+  width: min(var(--photo-size), 66vw);
+  height: min(var(--photo-size), 66vw);
+  border-radius: 50%;
+  border: none; /* KHÔNG có viền trắng theo đúng ảnh mẫu */
+  box-shadow: 0 6px 18px rgba(70, 25, 35, 0.14);
+  overflow: hidden;
+  margin: 6px auto 26px;
+  background-color: var(--photo-placeholder-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.photo-wrapper:hover {
+  transform: scale(1.02);
+}
+
+/* Placeholder màu nâu hồng (#c4897a) */
+.photo-placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: var(--photo-placeholder-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  user-select: none;
+  padding: 16px;
+}
+
+/* Chữ "Hình chị ở đây" màu tối theo đúng hình mẫu */
+.placeholder-text {
+  color: #1e1e1e; /* Màu chữ đen/charcoal như trong hình chụp */
+  font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: clamp(1.05rem, 4.2vw, 1.25rem);
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  text-align: center;
+}
+
+/* Thẻ ảnh chân dung: cắt tròn đẹp, lấp đầy, không méo, không viền */
+.photo-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: none;
+  z-index: 2;
+  display: none; /* Mặc định ẩn, chỉ hiện khi onload thành công */
+}
+
+/* --------------------------------------------------------------------------
+   4. TIÊU ĐỀ 2 DÒNG (THEO ĐÚNG THIẾT KẾ MẪU)
+   Dòng 1: "Chúc mừng Bonbon tốt"
+   Dòng 2: "nghiệp"
+   Font chữ viết tay thư pháp mềm mại, gradient tím sang hồng san hô
+   -------------------------------------------------------------------------- */
+.card-header {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.card-title {
+  font-family: 'Dancing Script', 'Caveat', cursive;
+  font-size: clamp(1.85rem, 6.2vw, 2.3rem);
+  font-weight: 700;
+  line-height: 1.32;
+  text-align: center;
+  margin: 0;
+  padding: 0 4px;
+  user-select: none;
+}
+
+.title-line {
+  display: block;
+  text-align: center;
+}
+
+/* Dòng 1: Gradient chuyển màu từ tím sang hồng san hô */
+.title-line-1 {
+  background: linear-gradient(90deg, #5b4490 0%, #894b90 40%, #c16377 78%, #db7471 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.7));
+}
+
+/* Dòng 2: Màu tím hồng dịu dàng */
+.title-line-2 {
+  color: #925388;
+  background: linear-gradient(90deg, #874b8e 0%, #a45889 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.7));
+  margin-top: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   5. CÁC STICKER TRANG TRÍ Ở CÁC GÓC (ĐẶT ĐÚNG VỊ TRÍ THEO ẢNH MẪU)
+   -------------------------------------------------------------------------- */
+.sticker {
+  position: absolute;
+  display: block;
+  user-select: none;
+  pointer-events: none;
+  z-index: 10;
+  filter: drop-shadow(0 5px 12px rgba(50, 20, 40, 0.16));
+}
+
+/* Sticker 1: Hoa văn trang trí vàng chạy ngang trên đỉnh khung */
+.sticker-ornament {
+  top: var(--ornament-top);
+  left: var(--ornament-left);
+  width: var(--ornament-size);
+  height: auto;
+  transform: translateX(-50%);
+  animation: float-ornament 5s ease-in-out infinite;
+}
+
+/* Sticker 2: Mũ cử nhân xanh + cuộn bằng ở góc trên bên trái */
+.sticker-cap {
+  top: var(--cap-top);
+  left: var(--cap-left);
+  width: var(--cap-size);
+  height: auto;
+  animation: float-cap 4.5s ease-in-out infinite;
+}
+
+/* Sticker 3: Tai nghe pastel ở góc dưới bên trái */
+.sticker-headphones {
+  bottom: var(--headphones-bottom);
+  left: var(--headphones-left);
+  width: var(--headphones-size);
+  height: auto;
+  animation: float-headphones 4.8s ease-in-out infinite;
+}
+
+/* Sticker 4: Quyển sổ + bút ở góc dưới bên phải */
+.sticker-notebook {
+  bottom: var(--notebook-bottom);
+  right: var(--notebook-right);
+  width: var(--notebook-size);
+  height: auto;
+  animation: float-notebook 4.2s ease-in-out infinite;
+}
+
+/* --------------------------------------------------------------------------
+   ANIMATION LƠ LỬNG NHẸ NHÀNG (FLOATING EFFECT)
+   -------------------------------------------------------------------------- */
+@keyframes float-cap {
+  0%, 100% {
+    transform: translateY(0px) rotate(var(--cap-rotate));
+  }
+  50% {
+    transform: translateY(-8px) rotate(calc(var(--cap-rotate) + 2deg));
+  }
+}
+
+@keyframes float-ornament {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-5px) scale(1.02);
+  }
+}
+
+@keyframes float-headphones {
+  0%, 100% {
+    transform: translateY(0px) rotate(var(--headphones-rotate));
+  }
+  50% {
+    transform: translateY(-7px) rotate(calc(var(--headphones-rotate) - 2deg));
+  }
+}
+
+@keyframes float-notebook {
+  0%, 100% {
+    transform: translateY(0px) rotate(var(--notebook-rotate));
+  }
+  50% {
+    transform: translateY(-8px) rotate(calc(var(--notebook-rotate) + 2deg));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. RESPONSIVE CHO MÀN HÌNH ĐIỆN THOẠI
+   -------------------------------------------------------------------------- */
+@media (max-width: 440px) {
+  :root {
+    --cap-size: 130px;
+    --cap-top: -38px;
+    --cap-left: -38px;
+
+    --ornament-size: 290px;
+    --ornament-top: -30px;
+
+    --headphones-size: 92px;
+    --headphones-bottom: -14px;
+    --headphones-left: -18px;
+
+    --notebook-size: 105px;
+    --notebook-bottom: -16px;
+    --notebook-right: -18px;
+  }
+
+  body {
+    padding: 16px 12px;
+  }
+
+  .card {
+    padding: 30px 14px 36px;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 360px) {
+  :root {
+    --cap-size: 110px;
+    --cap-top: -32px;
+    --cap-left: -28px;
+
+    --ornament-size: 250px;
+    --ornament-top: -26px;
+
+    --headphones-size: 80px;
+    --headphones-bottom: -10px;
+    --headphones-left: -14px;
+
+    --notebook-size: 92px;
+    --notebook-bottom: -12px;
+    --notebook-right: -14px;
+  }
+
+  .card {
+    padding: 26px 12px 30px;
+  }
+}
