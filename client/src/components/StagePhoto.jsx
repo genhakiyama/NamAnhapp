@@ -1,81 +1,75 @@
 import React, { useRef } from 'react';
 import confetti from 'canvas-confetti';
-import { Camera } from 'lucide-react';
-import { soundFX } from '../utils/soundEffects';
 
-export default function StagePhoto({
-  stageData,
-  generalData,
-  onNext,
-  onUploadPhoto
-}) {
+export default function StagePhoto({ onNext }) {
   const fileInputRef = useRef(null);
+  const [photoSrc, setPhotoSrc] = React.useState('/profile.png');
 
-  const photoUrl = stageData?.photoUrl || '';
-  const badgeText = stageData?.badgeText || 'Chúc mừng tốt nghiệp!';
-  const graduateName = generalData?.graduateName || 'Bonbon';
-  const fieldAndSchool = generalData?.fieldAndSchool || 'Germanistik · USSH TP.HCM';
-  const heroTagline = stageData?.heroTagline || 'Bốn năm với tiếng Đức — cảm ơn vì đã ghé thăm ngày đặc biệt này 🎓';
-  const buttonText = stageData?.buttonText || 'Bắt đầu ♡';
+  // Load custom photo if saved in localStorage
+  React.useEffect(() => {
+    try {
+      const saved = localStorage.getItem('bonbon_custom_photo');
+      if (saved) {
+        setPhotoSrc(saved);
+      }
+    } catch (e) {}
+  }, []);
 
   const handleStart = () => {
-    soundFX.playChord();
     confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#e8619a', '#fbd0df', '#ffd700', '#c2377a', '#ffffff']
+      particleCount: 70,
+      spread: 60,
+      origin: { y: 0.65 },
+      colors: ['#e26928', '#f6a6c1', '#ffd700', '#7aa2f7', '#ffffff']
     });
     onNext();
   };
 
   const handlePhotoClick = () => {
-    soundFX.playButtonTap();
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
 
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (file && onUploadPhoto) {
-      onUploadPhoto(file);
+  const handleFileChange = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const dataUrl = event.target.result;
+        setPhotoSrc(dataUrl);
+        try {
+          localStorage.setItem('bonbon_custom_photo', dataUrl);
+        } catch (err) {}
+      };
+      reader.readAsDataURL(file);
     }
   };
 
   return (
-    <div className="card stage-card">
+    <div className="card-van-gogh" id="card">
+      {/* Hoa văn trang trí trên đỉnh khung */}
+      <img
+        src="/ornament.png"
+        alt="Hoa văn trang trí"
+        className="sticker-ornament"
+        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+      />
+
+      {/* Hình tròn Profile Picture */}
       <div
-        id="photo"
+        className="photo-circle-vg"
         onClick={handlePhotoClick}
-        title="Nhấn để đổi ảnh đại diện"
-        style={{
-          backgroundImage: photoUrl ? `url(${photoUrl})` : 'none',
-          backgroundColor: photoUrl ? 'transparent' : '#ffe3ee',
-          backgroundPosition: 'center',
-          backgroundSize: 'cover',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          position: 'relative',
-          overflow: 'hidden'
-        }}
+        title="Nhấn để thay đổi ảnh nếu muốn"
       >
-        {!photoUrl && (
-          <div style={{ textAlign: 'center', padding: '10px' }}>
-            <Camera size={34} color="#c2377a" style={{ margin: '0 auto 6px' }} />
-            <span style={{ fontSize: '13px', fontWeight: 600, color: '#5a2547' }}>
-              Nhấn để thêm ảnh của bạn
-            </span>
-          </div>
-        )}
-        {photoUrl && (
-          <div className="photo-overlay-hint">
-            <Camera size={20} color="#fff" />
-          </div>
-        )}
+        <img
+          src={photoSrc}
+          alt="Ảnh tốt nghiệp Bonbon"
+          className="photo-img-vg"
+          onError={(e) => {
+            e.currentTarget.src = '/images/profile.png';
+          }}
+        />
       </div>
 
       <input
@@ -86,17 +80,36 @@ export default function StagePhoto({
         onChange={handleFileChange}
       />
 
-      <h1 className="stage-title">{badgeText}</h1>
-      <p className="subtitle">
-        <b>{graduateName}</b> · {fieldAndSchool}
-      </p>
-      <p className="tagline">{heroTagline}</p>
+      {/* Dòng chữ chúc mừng màu cam nghệ thuật */}
+      <div className="title-container-vg">
+        <h1 className="card-title-vg">
+          <span>Chúc mừng Bonbon tốt</span>
+          <span>nghiệp</span>
+        </h1>
+      </div>
 
-      <div className="arrows">
-        <button className="btn btn-primary" onClick={handleStart}>
-          {buttonText}
+      {/* Nút bấm chuyển sang trang tiếp nối */}
+      <div className="next-btn-wrapper">
+        <button className="btn-open-card" onClick={handleStart} title="Nhấn để xem trang tiếp theo">
+          Mở xem thiệp ›
         </button>
       </div>
+
+      {/* Sticker góc dưới bên trái: Mũ cử nhân + cuộn bằng tốt nghiệp */}
+      <img
+        src="/graduation-cap.png"
+        alt="Mũ cử nhân và cuộn bằng"
+        className="sticker-vg sticker-cap-vg"
+        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+      />
+
+      {/* Sticker góc dưới bên phải: Quyển sổ xanh có trái tim + cây bút chì */}
+      <img
+        src="/notebook.png"
+        alt="Quyển sổ và bút chì"
+        className="sticker-vg sticker-notebook-vg"
+        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+      />
     </div>
   );
 }

@@ -5,74 +5,419 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Chúc mừng Bonbon tốt nghiệp 🎓</title>
 
-  <!-- Google Fonts: Dancing Script / Pacifico cho tiêu đề, Quicksand cho nội dung -->
+  <!-- Google Fonts: Dancing Script / Caveat cho chữ viết tay nghệ thuật màu cam, Quicksand cho tổng thể -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Pacifico&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ==========================================================================
+       THIỆP CHÚC MỪNG TỐT NGHIỆP - BONBON
+       ========================================================================== */
+    :root {
+      --title-color: #e26928;
+      --card-glass: rgba(255, 255, 255, 0.46);
+      --card-blur: 14px;
+      --card-radius: 28px;
+      --card-max-width: min(420px, 88vw);
+      --float-duration: 4.8s;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    body {
+      font-family: "Quicksand", -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #2b1d28;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      background-color: #f6d29d;
+    }
+
+    /* --------------------------------------------------------------------------
+       LỚP 1: HÌNH NỀN TRANH SƠN DẦU (background.jpg)
+       -------------------------------------------------------------------------- */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("background.jpg"), url("images/background.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: -1;
+    }
+
+    /* --------------------------------------------------------------------------
+       BỌC CĂN GIỮA MÀN HÌNH
+       -------------------------------------------------------------------------- */
+    .card-wrapper {
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(16px, 4vw, 32px) clamp(12px, 3vw, 20px);
+      z-index: 1;
+    }
+
+    /* --------------------------------------------------------------------------
+       KHUNG KÍNH MỜ TRUNG TÂM (FROSTED GLASS CARD)
+       -------------------------------------------------------------------------- */
+    .card {
+      position: relative;
+      width: var(--card-max-width);
+      background: var(--card-glass);
+      backdrop-filter: blur(var(--card-blur));
+      -webkit-backdrop-filter: blur(var(--card-blur));
+      border-radius: var(--card-radius);
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      box-shadow: 
+        0 18px 45px rgba(35, 18, 30, 0.16),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+      padding: clamp(28px, 8vw, 38px) clamp(18px, 5vw, 24px) clamp(38px, 9vw, 52px);
+      overflow: visible;
+      transition: transform 0.3s ease;
+    }
+
+    /* --------------------------------------------------------------------------
+       HOA VĂN ĐỈNH KHUNG (ornament.png)
+       -------------------------------------------------------------------------- */
+    .sticker-ornament {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 84%;
+      max-width: 350px;
+      height: auto;
+      pointer-events: none;
+      z-index: 8;
+      filter: drop-shadow(0 3px 6px rgba(180, 110, 40, 0.28));
+      user-select: none;
+    }
+
+    /* --------------------------------------------------------------------------
+       HÌNH TRÒN CHỨA PROFILE PICTURE
+       -------------------------------------------------------------------------- */
+    .photo-circle {
+      width: min(260px, 66vw);
+      height: min(260px, 66vw);
+      border-radius: 50%;
+      margin-top: clamp(14px, 4vw, 22px);
+      margin-bottom: clamp(16px, 4.5vw, 24px);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid rgba(255, 255, 255, 0.65);
+      box-shadow: 0 10px 28px rgba(60, 25, 35, 0.2);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      flex-shrink: 0;
+      background-color: #c4897a;
+    }
+
+    .photo-circle:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 32px rgba(60, 25, 35, 0.26);
+    }
+
+    .photo-circle:active {
+      transform: scale(0.98);
+    }
+
+    /* Ảnh chân dung bên trong hình tròn */
+    .photo-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 50%;
+      z-index: 2;
+    }
+
+    /* Placeholder dự phòng nếu chưa có ảnh */
+    .photo-placeholder {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background-color: #c4897a;
+      padding: 16px;
+      z-index: 1;
+    }
+
+    .placeholder-text {
+      color: #111111;
+      font-family: "Quicksand", sans-serif;
+      font-weight: 500;
+      font-size: clamp(1.1rem, 4vw, 1.3rem);
+      letter-spacing: 0.2px;
+      user-select: none;
+    }
+
+    /* --------------------------------------------------------------------------
+       DÒNG CHỮ CHÚC MỪNG NGHỆ THUẬT MÀU CAM
+       -------------------------------------------------------------------------- */
+    .title-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 2px;
+      margin-bottom: clamp(8px, 2.5vw, 16px);
+    }
+
+    .card-title {
+      font-family: "Dancing Script", "Caveat", cursive;
+      font-weight: 700;
+      font-size: clamp(1.95rem, 7.5vw, 2.65rem);
+      line-height: 1.25;
+      color: var(--title-color);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 0.3px;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.75);
+      filter: drop-shadow(0 2px 4px rgba(180, 80, 30, 0.16));
+      user-select: none;
+    }
+
+    .title-line-1 {
+      display: block;
+    }
+
+    .title-line-2 {
+      display: block;
+    }
+
+    /* --------------------------------------------------------------------------
+       STICKERS TRANG TRÍ 2 GÓC DƯỚI
+       -------------------------------------------------------------------------- */
+    .sticker {
+      position: absolute;
+      display: block;
+      user-select: none;
+      pointer-events: none;
+      height: auto;
+      will-change: transform;
+    }
+
+    /* Mũ cử nhân + cuộn bằng ở góc dưới bên trái */
+    .sticker-cap {
+      bottom: clamp(-38px, -9vw, -24px);
+      left: clamp(-34px, -8vw, -20px);
+      width: clamp(125px, 33vw, 160px);
+      transform: rotate(-12deg);
+      z-index: 15;
+      filter: drop-shadow(0 8px 18px rgba(25, 20, 50, 0.26));
+      animation: float-cap var(--float-duration) ease-in-out infinite;
+    }
+
+    /* Quyển sổ + bút ở góc dưới bên phải */
+    .sticker-notebook {
+      bottom: clamp(-34px, -8.5vw, -22px);
+      right: clamp(-30px, -7.5vw, -18px);
+      width: clamp(120px, 31vw, 155px);
+      transform: rotate(11deg);
+      z-index: 15;
+      filter: drop-shadow(0 8px 18px rgba(25, 20, 50, 0.26));
+      animation: float-notebook var(--float-duration) ease-in-out infinite;
+      animation-delay: 0.5s;
+    }
+
+    /* --------------------------------------------------------------------------
+       HIỆU ỨNG CHUYỂN ĐỘNG NHẸ NHÀNG (Floating Animation)
+       -------------------------------------------------------------------------- */
+    @keyframes float-cap {
+      0%, 100% {
+        transform: translateY(0px) rotate(-12deg);
+      }
+      50% {
+        transform: translateY(-8px) rotate(-10deg);
+      }
+    }
+
+    @keyframes float-notebook {
+      0%, 100% {
+        transform: translateY(0px) rotate(11deg);
+      }
+      50% {
+        transform: translateY(-8px) rotate(13deg);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 380px) {
+      :root {
+        --card-max-width: 92vw;
+      }
+
+      .photo-circle {
+        width: min(220px, 62vw);
+        height: min(220px, 62vw);
+      }
+
+      .sticker-cap {
+        width: min(120px, 32vw);
+      }
+
+      .sticker-notebook {
+        width: min(115px, 30vw);
+      }
+    }
+
+    @media (min-width: 768px) {
+      :root {
+        --card-max-width: 430px;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sticker-cap,
+      .sticker-notebook {
+        animation: none;
+      }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- LỚP 1: NỀN (background.jpg phủ kín) -->
-  <div class="bg-layer"></div>
-
-  <!-- LỚP 2: KHUNG MỜ TRUNG TÂM -->
-  <div class="blur-frame" aria-hidden="true"></div>
+  <!-- LỚP 1: HÌNH NỀN TRANH SƠN DẦU (background.jpg) -->
+  <div class="bg-layer" aria-hidden="true"></div>
 
   <!-- BỌC CĂN GIỮA THIỆP -->
   <div class="card-wrapper">
-    <!-- LỚP 3: NỘI DUNG THIỆP -->
+    <!-- KHUNG THIỆP KÍNH MỜ TRUNG TÂM -->
     <main class="card" id="card">
-      <!-- STICKER: Hoa văn phía trên khung -->
-      <img src="images/ornament.png" alt="Hoa văn trang trí" class="sticker sticker-ornament"
-        onerror="handleStickerError(this)" />
+      
+      <!-- HOA VĂN TRANG TRÍ TRÊN ĐỈNH KHUNG -->
+      <img src="images/ornament.png" alt="Hoa văn trang trí" class="sticker-ornament" 
+        onerror="if(this.src.indexOf('images/')!==-1){this.src='ornament.png';}else{this.style.display='none';}" />
 
-      <!-- STICKER: Mũ cử nhân + cuộn bằng góc trên bên trái (hơi tràn) -->
-      <img src="images/graduation-cap.png" alt="Mũ cử nhân và cuộn bằng" class="sticker sticker-cap"
-        onerror="handleStickerError(this)" />
+      <!-- HÌNH TRÒN PROFILE PICTURE (Nhấn vào để thay đổi ảnh nếu muốn) -->
+      <div class="photo-circle" id="photoTrigger" title="Nhấn để thay đổi ảnh nếu muốn">
+        <!-- Ảnh đại diện chính thức trong folder -->
+        <img src="profile.png" alt="Ảnh tốt nghiệp Bonbon" id="bonbonPhoto" class="photo-img"
+          onerror="handlePhotoFallback(this)" />
 
-      <!-- HÌNH TRÒN CHỨA ẢNH -->
-      <div class="photo-circle">
-        <!-- Placeholder khi chưa có ảnh hoặc lỗi tải -->
+        <!-- Placeholder dự phòng nếu ảnh bị lỗi -->
         <div class="photo-placeholder" id="photoPlaceholder">
           <span class="placeholder-text">Hình chị ở đây</span>
         </div>
-
-        <!-- ẢNH GẮN CỨNG TỪ images/photo.jpg -->
-        <img src="images/photo.jpg" alt="Ảnh tốt nghiệp của Bonbon" id="bonbonPhoto" class="photo-img"
-          onload="handlePhotoLoad(this)" onerror="handlePhotoError(this)" />
       </div>
 
-      <!-- TIÊU ĐỀ + LỜI CHÚC PHỤ -->
-      <section class="content-block">
-        <!-- Dải nền trắng mờ giúp tiêu đề đọc rõ trên nền chi tiết -->
-        <div class="title-band">
-          <h1 class="card-title">
-            Chúc mừng Bonbon tốt nghiệp
-          </h1>
-        </div>
+      <!-- DÒNG CHỮ CHÚC MỪNG MÀU CAM NGHỆ THUẬT -->
+      <div class="title-container">
+        <h1 class="card-title">
+          <span class="title-line-1">Chúc mừng Bonbon tốt</span>
+          <span class="title-line-2">nghiệp</span>
+        </h1>
+      </div>
 
-        <!-- LỜI CHÚC PHỤ (dễ sửa) -->
-        <div class="wishes">
-          <!-- TODO: Thay lời chúc của bạn vào đây -->
-          <p class="wish-main">[VIẾT LỜI CHÚC CỦA TÔI VÀO ĐÂY]</p>
+      <!-- STICKER GÓC DƯỚI BÊN TRÁI: Mũ cử nhân + cuộn bằng tốt nghiệp -->
+      <img src="images/graduation-cap.png" alt="Mũ cử nhân và cuộn bằng" class="sticker sticker-cap" 
+        onerror="if(this.src.indexOf('images/')!==-1){this.src='graduation-cap.png';}else{this.style.display='none';}" />
 
-          <!-- TODO: Thay ngày tháng năm và tên trường vào đây -->
-          <p class="wish-sub">Ngày tốt nghiệp: [NGÀY/THÁNG/NĂM] • Trường: [TÊN TRƯỜNG]</p>
-        </div>
-      </section>
+      <!-- STICKER GÓC DƯỚI BÊN PHẢI: Quyển sổ xanh có trái tim + cây bút chì -->
+      <img src="images/notebook.png" alt="Quyển sổ và bút chì" class="sticker sticker-notebook" 
+        onerror="if(this.src.indexOf('images/')!==-1){this.src='notebook.png';}else{this.style.display='none';}" />
 
-      <!-- STICKER: Tai nghe góc dưới bên trái -->
-      <img src="images/headphones.png" alt="Tai nghe" class="sticker sticker-headphones"
-        onerror="handleStickerError(this)" />
-
-      <!-- STICKER: Quyển sổ + bút góc dưới bên phải -->
-      <img src="images/notebook.png" alt="Quyển sổ và bút" class="sticker sticker-notebook"
-        onerror="handleStickerError(this)" />
+      <!-- Input file ẩn để người dùng click vào ảnh đổi ảnh nhanh từ máy nếu thích -->
+      <input type="file" id="photoFileInput" accept="image/*" style="display: none;" />
     </main>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    // Fallback thử các tên file ảnh khác nhau trong folder trước khi hiện placeholder
+    function handlePhotoFallback(img) {
+      if (img.dataset.tried === undefined) {
+        img.dataset.tried = "1";
+        img.src = "Chúc mừng Bonbon tốt nghiệp.png";
+      } else if (img.dataset.tried === "1") {
+        img.dataset.tried = "2";
+        img.src = "images/profile.png";
+      } else {
+        img.style.display = "none";
+        const placeholder = document.getElementById("photoPlaceholder");
+        if (placeholder) placeholder.style.display = "flex";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const photo = document.getElementById("bonbonPhoto");
+      const photoTrigger = document.getElementById("photoTrigger");
+      const fileInput = document.getElementById("photoFileInput");
+      const placeholder = document.getElementById("photoPlaceholder");
+
+      // Kiểm tra ảnh đã lưu trước đó trong localStorage
+      const savedPhoto = localStorage.getItem("bonbon_custom_photo");
+      if (savedPhoto && photo) {
+        photo.src = savedPhoto;
+        photo.style.display = "block";
+        if (placeholder) placeholder.style.display = "none";
+      }
+
+      // Cho phép bấm vào ảnh để chọn ảnh khác nếu muốn
+      if (photoTrigger && fileInput) {
+        photoTrigger.addEventListener("click", () => {
+          fileInput.click();
+        });
+
+        fileInput.addEventListener("change", (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+              const dataUrl = event.target.result;
+              if (photo) {
+                photo.src = dataUrl;
+                photo.style.display = "block";
+                if (placeholder) placeholder.style.display = "none";
+                try {
+                  localStorage.setItem("bonbon_custom_photo", dataUrl);
+                } catch (err) {}
+              }
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>
