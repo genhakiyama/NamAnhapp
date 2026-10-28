@@ -1,13 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import { Send, Heart, Play, Pause, Volume2, VolumeX, Sparkles, Film } from 'lucide-react';
+import { Send, Heart, Play, Pause, Volume2, VolumeX, Sparkles, Film, Lock } from 'lucide-react';
 import { soundFX } from '../utils/soundEffects';
 
 export default function StageMemoriesWishes({
   stageData,
   wishes = [],
   onSendWish,
-  onPrev
+  onPrev,
+  onOpenAdmin
 }) {
   const [activeVideo, setActiveVideo] = useState(2); // 1 hoặc 2 (mặc định video 2 như mockup)
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -299,11 +300,21 @@ export default function StageMemoriesWishes({
           )}
         </div>
 
-        {/* Nút quay lại xem thư mời */}
+        {/* Nút quay lại xem thư mời & Nút mở trang xem lời chúc dành riêng cho BonBon */}
         <div className="wishes-bottom-actions">
           <button className="btn-back-card" onClick={onPrev} title="Quay lại xem Thư mời">
             ‹ Xem lại Thư mời
           </button>
+          {onOpenAdmin && (
+            <button
+              className="btn-admin-vault"
+              onClick={onOpenAdmin}
+              title="Trang xem lời chúc đã gửi (Chỉ dành cho BonBon)"
+            >
+              <Lock size={14} style={{ marginRight: '5px', verticalAlign: 'middle' }} />
+              Hộp thư BonBon
+            </button>
+          )}
         </div>
       </main>
 

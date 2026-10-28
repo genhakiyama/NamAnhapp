@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const LETTER_TEXT = `Cuối cùng thì giờ vàng đã điểm, ngày Bonbon tốt nghiệp đang đến gần rồi nên nhân cơ hội này mình muốn tâm sự đôi lời. Trong suốt 4 năm qua, từng người mình gặp, từng sự kiện trải qua đều để lại trong mình những dấu ấn riêng thật đặc biệt. 
 
@@ -13,7 +13,41 @@ Bon muốn viết nhiều lắm, nhưng văn đã dài rùi nên hẹn cả nhà
 Trân trọng,
 Nam Anh - Bonbon ♡`;
 
+// Kích thước chuẩn tỷ lệ cố định của Trang 2 (Bức thư to hơn, giữ nguyên tỷ lệ trên mọi thiết bị & khi thu phóng)
+const DESIGN_WIDTH = 640;
+const DESIGN_HEIGHT = 820;
+
 export default function StageLetter({ onPrev, onNext }) {
+  const wrapperRef = useRef(null);
+  const [scale, setScale] = useState(1);
+
+  useEffect(() => {
+    const updateScale = () => {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      // Dành khoảng đệm an toàn cho thanh nav-dots phía trên và viền 2 bên
+      const availW = vw - 24;
+      const availH = vh - 72;
+      const scaleW = availW / DESIGN_WIDTH;
+      const scaleH = availH / DESIGN_HEIGHT;
+      // Giữ nguyên tỉ lệ khung hình chuẩn xác khi phóng to / thu nhỏ hoặc đổi thiết bị
+      const nextScale = Math.max(0.32, Math.min(scaleW, scaleH, 1.35));
+      setScale(nextScale);
+    };
+
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', updateScale);
+    }
+    return () => {
+      window.removeEventListener('resize', updateScale);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', updateScale);
+      }
+    };
+  }, []);
+
   const handlePrev = () => {
     onPrev();
   };
@@ -23,58 +57,69 @@ export default function StageLetter({ onPrev, onNext }) {
   };
 
   return (
-    <div className="card-van-gogh card-letter-page" id="letterCard">
-      {/* Hoa văn đỉnh */}
-      <img
-        src="/ornament.png"
-        alt="Hoa văn trang trí"
-        className="sticker-ornament"
-        onError={(e) => { e.currentTarget.style.display = 'none'; }}
-      />
+    <div className="letter-stage-viewport" ref={wrapperRef}>
+      <div
+        className="letter-fixed-ratio-scaler"
+        style={{
+          width: `${DESIGN_WIDTH}px`,
+          height: `${DESIGN_HEIGHT}px`,
+          transform: `scale(${scale})`
+        }}
+      >
+        <div className="card-van-gogh card-letter-page" id="letterCard">
+          {/* Hoa văn đỉnh */}
+          <img
+            src="/ornament.png"
+            alt="Hoa văn trang trí"
+            className="sticker-ornament"
+            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+          />
 
-      <h2 className="letter-title">Tâm sự của Bonbon 💌</h2>
+          <h2 className="letter-title">Tâm sự của Bonbon 💌</h2>
 
-      {/* Nội dung tâm sự */}
-      <div className="letter-body">
-        {LETTER_TEXT}
+          {/* Nội dung tâm sự - Tỷ lệ bức thư lớn hơn, rõ ràng và giữ nguyên bố cục */}
+          <div className="letter-body">
+            {LETTER_TEXT}
+          </div>
+
+          {/* Ảnh cún cưng kỷ niệm */}
+          <div className="letter-photo-box">
+            <img
+              src="/anconcho.jpg"
+              alt="Kỷ niệm tốt nghiệp"
+              className="letter-photo-img"
+              onError={(e) => {
+                e.currentTarget.src = '/anconcho2.jpg';
+              }}
+            />
+          </div>
+
+          {/* Nút quay lại và nút sang trang Thư mời */}
+          <div className="letter-arrows">
+            <button className="btn-back-card" onClick={handlePrev} title="Quay lại trang bìa">
+              ‹ Xem lại bìa
+            </button>
+            <button className="btn-open-card btn-next-invite" onClick={handleNext} title="Xem thư mời tốt nghiệp">
+              Xem thư mời 💌 ›
+            </button>
+          </div>
+
+          {/* Sticker góc dưới */}
+          <img
+            src="/graduation-cap.png"
+            alt="Mũ cử nhân"
+            className="sticker-vg sticker-cap-vg sticker-small"
+            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+          />
+
+          <img
+            src="/notebook.png"
+            alt="Quyển sổ"
+            className="sticker-vg sticker-notebook-vg sticker-small"
+            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+          />
+        </div>
       </div>
-
-      {/* Ảnh cún cưng kỷ niệm */}
-      <div className="letter-photo-box">
-        <img
-          src="/anconcho.jpg"
-          alt="Kỷ niệm tốt nghiệp"
-          className="letter-photo-img"
-          onError={(e) => {
-            e.currentTarget.src = '/anconcho2.jpg';
-          }}
-        />
-      </div>
-
-      {/* Nút quay lại và nút sang trang Thư mời */}
-      <div className="letter-arrows" style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-        <button className="btn-back-card" onClick={handlePrev} title="Quay lại trang bìa">
-          ‹ Xem lại bìa
-        </button>
-        <button className="btn-open-card btn-next-invite" onClick={handleNext} title="Xem thư mời tốt nghiệp">
-          Xem thư mời 💌 ›
-        </button>
-      </div>
-
-      {/* Sticker góc dưới */}
-      <img
-        src="/graduation-cap.png"
-        alt="Mũ cử nhân"
-        className="sticker-vg sticker-cap-vg sticker-small"
-        onError={(e) => { e.currentTarget.style.display = 'none'; }}
-      />
-
-      <img
-        src="/notebook.png"
-        alt="Quyển sổ"
-        className="sticker-vg sticker-notebook-vg sticker-small"
-        onError={(e) => { e.currentTarget.style.display = 'none'; }}
-      />
     </div>
   );
 }

@@ -71,6 +71,8 @@ const INITIAL_WISHES = [
   }
 ];
 
+let memoryWishes = [...INITIAL_WISHES];
+
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
@@ -85,7 +87,10 @@ function json(data, status = 200) {
 }
 
 async function kvGet(env, key, fallback) {
-  if (!env.GRAD_KV) return fallback;
+  if (!env.GRAD_KV) {
+    if (key === 'wishes') return memoryWishes;
+    return fallback;
+  }
   try {
     const value = await env.GRAD_KV.get(key, 'json');
     return value ?? fallback;
@@ -96,7 +101,10 @@ async function kvGet(env, key, fallback) {
 }
 
 async function kvPut(env, key, value) {
-  if (!env.GRAD_KV) return false;
+  if (key === 'wishes') {
+    memoryWishes = value;
+  }
+  if (!env.GRAD_KV) return true;
   await env.GRAD_KV.put(key, JSON.stringify(value));
   return true;
 }
