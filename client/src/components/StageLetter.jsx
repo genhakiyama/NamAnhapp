@@ -3,16 +3,16 @@ import { X } from 'lucide-react';
 
 const LETTER_TEXT = `Cuối cùng thì giờ vàng đã điểm, ngày Bonbon tốt nghiệp đang đến gần rồi nên nhân cơ hội này mình muốn tâm sự đôi lời. Trong suốt 4 năm qua, từng người mình gặp, từng sự kiện trải qua đều để lại trong mình những dấu ấn riêng thật đặc biệt. 
 
-Đầu tiên, mình muốn gửi lời cảm ơn đến AIESEC. Là những ngày tháng miệt mài chạy số, nhảy AIESEC dance, đón EPs, giải quyết một đống bùi nhùi cùng nhau. Sau khi rời AIESEC, mình phải chữa lành một thời gian dài, nhưng tuyệt nhiên khi nhớ lại quãng thời gian gắn bó với mọi người ở đó thì luôn là những kỷ niệm đẹp và cảm ơn vì đã dạy Bon lớn.  
+Đầu tiên, mình muốn gửi lời cảm ơn đến AIESEC,. Là những ngày tháng miệt mài chạy số, nhảy AIESEC dance, đón EPs, giải quyết một đống bùi nhùi cùng nhau. Sau khi rời AIESEC, mình phải chữa lành một thời gian dài, nhưng tuyệt nhiên khi nhớ lại quãng thời gian gắn bó với mọi người ở đó thì luôn là những kỷ niệm đẹp và cảm ơn vì đã dạy Bon lớn và cảm ơn tất cả vì đã luôn bao dung với sự trẻ con trong những năm tháng mới bước chân vào đời. Yêu và nhớ mn thật nhiều!!! 
 
-Tiếp theo chắc chắn là ngôi nhà thứ 2 của mình - Khoa Ngữ Văn Đức. Ôi trời ơi, làm sao người ta có thể hiểu được nỗi khổ của sinh viên khoa Đức về việc ra trường đúng hạn nhỉ??? Là những giờ học C1 kinh khủng, khóc lên khóc xuống cùng mấy đứa bạn cùng bàn, thuyết trình rồi dự án liên tục. Huhu! Sau khi rời khoa, mình lại phải chữa lành một thời gian. Nhưng khi ngồi viết ra những dòng này lại tự thấy mình thật may mắn vì được vào khoa Đức. Bởi làm sao tìm được những người thầy giáo, cô giáo tâm huyết với sinh viên như ở khoa Đức và cũng không thể tìm được những đứa bạn “Hội bàn vuông” và tập thể K22. 
+Tiếp theo chắc chắn là ngôi nhà thứ 2 của mình - Khoa Ngữ Văn Đức. Ôi trời ơi, làm sao người ta có thể hiểu được nỗi khổ của sinh viên khoa Đức về việc ra trường đúng hạn nhỉ??? Là những giờ học C1 kinh khủng, khóc lên khóc xuống cùng mấy đứa bạn cùng bàn, thuyết trình rồi dự án liên tục. Huhu! Sau khi rời khoa, mình lại phải chữa lành một thời gian. Nhưng khi ngồi viết ra những dòng này lại tự thấy mình thật may mắn vì được vào khoa Đức. Bởi làm sao tìm được những người thầy giáo, cô giáo tâm huyết với sinh viên như ở khoa Đức và cũng không thể tìm được những đứa bạn “Hội bàn vuông” và tập thể K22. Giờ không còn gặp mấy bạn hằng ngày nên bị buồn miết lun á chời ơi! :(((
 
-Và cuối cùng là lời cảm ơn, biết ơn sâu sắc đến gia đình, là hậu phương vững chắc giúp con luôn tự tin làm những điều mình muốn. Yêu mẹ iu và ba ba và cả đại gia đình mình nữa. 
+Và cuối cùng là lời cảm ơn, biết ơn sâu sắc đến gia đình, là hậu phương vững chắc giúp con luôn tự tin làm những điều mình muốn. Yêu mẹ iu và ba ba và cả đại gia đình mình nữa.
 
-Bon muốn viết nhiều lắm, nhưng văn đã dài rùi nên hẹn cả nhà đến chung vui cùng Bon trong lễ tốt nghiệp để mình tái ngộ và tâm sự thêm nhé! 
+Bon muốn viết nhiều lắm, nhưng văn đã dài rùi nên hẹn cả nhà đến chung vui cùng Bon trong lễ tốt nghiệp để mình tái ngộ và tâm sự thêm nhé!  
 
-Trân trọng,
-Nam Anh - Bonbon ♡`;
+Trân trọng
+Nam Anh - Bonbon.`;
 
 // Bộ ảnh tiền tố profile sắp xếp theo phong cách Graduation Collage ở Trang 2
 const GRADUATION_PHOTOS = [
