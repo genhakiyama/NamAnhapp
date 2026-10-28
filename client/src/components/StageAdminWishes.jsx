@@ -66,8 +66,16 @@ export default function StageAdminWishes({ wishes = [], onDeleteWish, onBack }) 
             onError={(e) => { e.currentTarget.style.display = 'none'; }}
           />
 
-          <div className="admin-lock-badge">
-            <Lock size={28} />
+          <div className="admin-profile-avatar-wrap">
+            <img
+              src="/profile1.jpg"
+              alt="BonBon Profile 1"
+              className="admin-profile-avatar"
+              onError={(e) => { e.currentTarget.src = '/profile.png'; }}
+            />
+            <span className="admin-lock-mini-badge">
+              <Lock size={14} />
+            </span>
           </div>
 
           <h2 className="admin-login-title">Hộp thư bí mật của BonBon 💌</h2>
@@ -143,6 +151,14 @@ export default function StageAdminWishes({ wishes = [], onDeleteWish, onBack }) 
           />
 
           <div className="admin-vault-header">
+            <div className="admin-vault-avatar-box">
+              <img
+                src="/profile1.jpg"
+                alt="BonBon Profile 1"
+                className="admin-vault-avatar"
+                onError={(e) => { e.currentTarget.src = '/profile.png'; }}
+              />
+            </div>
             <div className="admin-vault-title-row">
               <BookHeart size={26} className="vault-icon" />
               <h2 className="admin-vault-title">Sổ Lưu Bút Của BonBon</h2>

@@ -103,27 +103,23 @@ export default function StageMemoriesWishes({
   return (
     <div className="stage-final-container">
       {/* ========================================================
-          CỘT TRÁI (LEFT PANEL): VIDEO 1 & 2 + POLAROID + MINI PLAYER
+          CỘT TRÁI (LEFT PANEL): VIDEO 1, 2, 3, 4, 5 + POLAROID + MINI PLAYER
           ======================================================== */}
       <aside className="final-left-decor">
-        {/* Khung phát Video 1 & 2 */}
+        {/* Khung phát Video 1 -> 5 */}
         <div className="final-video-box">
-          {/* Tab chọn Video 1 hoặc Video 2 */}
+          {/* Tab chọn Video 1, 2, 3, 4, 5 */}
           <div className="video-tabs-row">
-            <button
-              className={`video-tab-btn ${activeVideo === 1 ? 'active' : ''}`}
-              onClick={() => handleSelectVideo(1)}
-              title="Xem Video 1: Dạo bước phố cổ"
-            >
-              <Film size={13} /> Video 1
-            </button>
-            <button
-              className={`video-tab-btn ${activeVideo === 2 ? 'active' : ''}`}
-              onClick={() => handleSelectVideo(2)}
-              title="Xem Video 2: Quảng trường ngập hoa"
-            >
-              <Film size={13} /> Video 2
-            </button>
+            {[1, 2, 3, 4, 5].map((num) => (
+              <button
+                key={num}
+                className={`video-tab-btn ${activeVideo === num ? 'active' : ''}`}
+                onClick={() => handleSelectVideo(num)}
+                title={`Xem Video kỷ niệm ${num}`}
+              >
+                <Film size={12} /> Video {num}
+              </button>
+            ))}
           </div>
 
           {/* Vùng hiển thị video */}
@@ -131,7 +127,7 @@ export default function StageMemoriesWishes({
             <video
               ref={videoRef}
               key={activeVideo}
-              src={activeVideo === 1 ? '/video1.mp4' : '/video2.mp4'}
+              src={`/video${activeVideo}.mp4`}
               className="final-video-element"
               playsInline
               loop

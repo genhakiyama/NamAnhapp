@@ -4,9 +4,15 @@ import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+import nodemailer from 'nodemailer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Tự động load file .env từ thư mục server (ưu tiên) và thư mục gốc
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
+dotenv.config({ path: path.join(__dirname, '.env'), override: true });
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -52,6 +58,82 @@ const upload = multer({
 });
 
 // Helper functions
+async function sendNotificationEmail(wish) {
+  // Đọc lại file .env mới nhất mỗi lần gửi để nếu người dùng vừa sửa .env không cần khởi động lại server
+  dotenv.config({ path: path.join(__dirname, '..', '.env'), override: true });
+  dotenv.config({ path: path.join(__dirname, '.env'), override: true });
+
+  const rawReceiver = process.env.RECEIVER_EMAIL || process.env.NOTIFICATION_EMAIL || 'bonnanguyen2004@gmail.com';
+  const emailUser = (process.env.EMAIL_USER || 'sandundertailroal@gmail.com').trim();
+  const emailPass = (process.env.EMAIL_PASS || '').replace(/\s+/g, '');
+
+  // Gửi đồng thời tới cả RECEIVER_EMAIL trong .env và sandundertailroal@gmail.com để bạn kiểm tra hòm thư nào cũng thấy ngay
+  const recipientsSet = new Set(
+    rawReceiver
+      .split(',')
+      .map((e) => e.trim())
+      .filter(Boolean)
+  );
+  if (emailUser) {
+    recipientsSet.add(emailUser);
+  }
+  const targetEmail = Array.from(recipientsSet).join(', ');
+
+  console.log(`[Nodemailer] Đang gửi thông báo lời chúc tới: ${targetEmail}`);
+
+  if (!emailUser || !emailPass) {
+    console.warn('⚠️ [Nodemailer] Thiếu EMAIL_USER hoặc EMAIL_PASS trong file .env');
+    return { sent: false, error: 'Missing EMAIL_USER or EMAIL_PASS in .env' };
+  }
+
+  try {
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: emailUser,
+        pass: emailPass
+      },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 15000
+    });
+
+    const mailOptions = {
+      from: `"Thiệp Tốt Nghiệp Bonbon" <${emailUser}>`,
+      to: targetEmail,
+      subject: `🎓 Lời chúc tốt nghiệp mới từ ${wish.name || 'Người bạn thân'}!`,
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 24px; color: #333; max-width: 580px; margin: 0 auto; border: 1.5px solid #fed7aa; border-radius: 16px; background: #fffcf9; box-shadow: 0 4px 14px rgba(0,0,0,0.06);">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h2 style="color: #e26928; margin: 0; font-size: 24px;">🎓 Có lời chúc tốt nghiệp mới dành cho Bonbon! 💌</h2>
+            <p style="color: #8c583a; font-size: 14px; margin-top: 6px;">Thời gian: ${new Date(wish.createdAt).toLocaleString('vi-VN')}</p>
+          </div>
+
+          <div style="background: #ffffff; padding: 18px 20px; border-left: 5px solid #e26928; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+            <p style="margin: 0 0 10px 0; font-size: 16px; font-weight: bold; color: #b94b15;">
+              Người gửi: <span style="color: #222;">${wish.name || 'Bạn ẩn danh'}</span>
+            </p>
+            <p style="margin: 0; font-size: 15px; line-height: 1.7; color: #333; white-space: pre-wrap;">${wish.text}</p>
+          </div>
+
+          <p style="font-size: 12px; color: #999; text-align: center; margin: 0;">
+            Thư thông báo tự động qua Nodemailer từ trang kỷ niệm tốt nghiệp Bonbon (Nam Anh) 🌸
+          </p>
+        </div>
+      `
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`✅ [Nodemailer] Gửi email thành công tới [${targetEmail}]! Message ID: ${info.messageId}`);
+    return { sent: true, messageId: info.messageId, to: targetEmail };
+  } catch (err) {
+    console.error('❌ [Nodemailer] Gặp lỗi khi gửi email qua Gmail:', err.message);
+    return { sent: false, error: err.message };
+  }
+}
+
 function readJson(filePath, defaultData = {}) {
   try {
     if (fs.existsSync(filePath)) {
@@ -101,8 +183,8 @@ app.get('/api/wishes', (req, res) => {
   res.json(wishes);
 });
 
-// 4. Add Wish
-app.post('/api/wishes', (req, res) => {
+// 4. Add Wish (Lưu lời chúc & gửi email qua Nodemailer)
+app.post('/api/wishes', async (req, res) => {
   const { name, text } = req.body;
   if (!text || !text.trim()) {
     return res.status(400).json({ error: 'Lời chúc không được để trống' });
@@ -119,7 +201,16 @@ app.post('/api/wishes', (req, res) => {
   wishes.unshift(newWish);
   writeJson(WISHES_FILE, wishes);
 
-  res.status(201).json({ message: 'Gửi lời chúc thành công', wish: newWish });
+  // Gửi email qua Nodemailer và trả kết quả về cho client
+  const emailResult = await sendNotificationEmail(newWish);
+
+  res.status(201).json({
+    message: 'Gửi lời chúc thành công',
+    wish: newWish,
+    emailSent: emailResult.sent,
+    emailTo: emailResult.to || null,
+    emailError: emailResult.error || null
+  });
 });
 
 // 5. Delete Wish

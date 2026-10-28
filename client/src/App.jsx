@@ -114,10 +114,12 @@ export default function App() {
             return updated;
           });
         }
+        return result;
       }
     } catch (err) {
       console.warn('Saved to localStorage, offline API note:', err);
     }
+    return null;
   };
 
   const handleDeleteWish = async (wishId) => {

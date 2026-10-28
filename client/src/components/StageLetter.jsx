@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { X } from 'lucide-react';
 
 const LETTER_TEXT = `Cuối cùng thì giờ vàng đã điểm, ngày Bonbon tốt nghiệp đang đến gần rồi nên nhân cơ hội này mình muốn tâm sự đôi lời. Trong suốt 4 năm qua, từng người mình gặp, từng sự kiện trải qua đều để lại trong mình những dấu ấn riêng thật đặc biệt. 
 
@@ -13,13 +14,53 @@ Bon muốn viết nhiều lắm, nhưng văn đã dài rùi nên hẹn cả nhà
 Trân trọng,
 Nam Anh - Bonbon ♡`;
 
-// Kích thước chuẩn tỷ lệ cố định của Trang 2 (Bức thư to hơn, giữ nguyên tỷ lệ trên mọi thiết bị & khi thu phóng)
-const DESIGN_WIDTH = 640;
-const DESIGN_HEIGHT = 820;
+// Bộ ảnh tiền tố profile sắp xếp theo phong cách Graduation Collage ở Trang 2
+const GRADUATION_PHOTOS = [
+  {
+    id: 'p1',
+    src: '/profile1.jpg',
+    caption: 'Bầu trời mới 🎓',
+    badge: 'Class of 2026',
+    rotate: '-6deg'
+  },
+  {
+    id: 'p2',
+    src: '/profile2.jpg',
+    caption: 'Thanh xuân rực rỡ ✨',
+    badge: 'Germanistik',
+    rotate: '-2deg'
+  },
+  {
+    id: 'p3',
+    src: '/profile3.jpg',
+    caption: 'Hành trình nước Đức 🏰',
+    badge: 'Bonbon ♡',
+    rotate: '2.5deg'
+  },
+  {
+    id: 'p0',
+    src: '/profile.png',
+    caption: 'Kỷ niệm đáng nhớ 🌸',
+    badge: 'USSH K22',
+    rotate: '6deg'
+  },
+  {
+    id: 'dog',
+    src: '/anconcho.jpg',
+    caption: 'Cún cưng đồng hành 🐾',
+    badge: 'Best Friend',
+    rotate: '-3.5deg'
+  }
+];
+
+// Kích thước chuẩn tỷ lệ cố định của Trang 2 (Bức thư to hơn + Bộ ảnh Graduation, giữ nguyên tỷ lệ trên mọi thiết bị & khi thu phóng)
+const DESIGN_WIDTH = 720;
+const DESIGN_HEIGHT = 890;
 
 export default function StageLetter({ onPrev, onNext }) {
   const wrapperRef = useRef(null);
   const [scale, setScale] = useState(1);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
 
   useEffect(() => {
     const updateScale = () => {
@@ -27,11 +68,11 @@ export default function StageLetter({ onPrev, onNext }) {
       const vh = window.innerHeight;
       // Dành khoảng đệm an toàn cho thanh nav-dots phía trên và viền 2 bên
       const availW = vw - 24;
-      const availH = vh - 72;
+      const availH = vh - 68;
       const scaleW = availW / DESIGN_WIDTH;
       const scaleH = availH / DESIGN_HEIGHT;
       // Giữ nguyên tỉ lệ khung hình chuẩn xác khi phóng to / thu nhỏ hoặc đổi thiết bị
-      const nextScale = Math.max(0.32, Math.min(scaleW, scaleH, 1.35));
+      const nextScale = Math.max(0.32, Math.min(scaleW, scaleH, 1.3));
       setScale(nextScale);
     };
 
@@ -82,16 +123,39 @@ export default function StageLetter({ onPrev, onNext }) {
             {LETTER_TEXT}
           </div>
 
-          {/* Ảnh cún cưng kỷ niệm */}
-          <div className="letter-photo-box">
-            <img
-              src="/anconcho.jpg"
-              alt="Kỷ niệm tốt nghiệp"
-              className="letter-photo-img"
-              onError={(e) => {
-                e.currentTarget.src = '/anconcho2.jpg';
-              }}
-            />
+          {/* BỘ SƯU TẬP ẢNH PROFILE SẮP XẾP THEO KIỂU GRADUATION YEARBOOK / POLAROID BANNER */}
+          <div className="grad-collage-section">
+            <div className="grad-collage-ribbon">
+              <span>🎓 GRADUATION MEMORIES • BONBON K22 🎓</span>
+            </div>
+
+            <div className="grad-polaroid-fan">
+              {GRADUATION_PHOTOS.map((photo, index) => (
+                <div
+                  key={photo.id}
+                  className={`grad-polaroid-card grad-card-${index}`}
+                  style={{ '--card-rotate': photo.rotate }}
+                  onClick={() => setSelectedPhoto(photo)}
+                  title="Nhấn để phóng to ảnh kỷ niệm"
+                >
+                  {index === 0 && (
+                    <span className="grad-mini-cap-badge" aria-hidden="true">🎓</span>
+                  )}
+                  <span className="grad-tag-pill">{photo.badge}</span>
+                  <div className="grad-polaroid-img-wrap">
+                    <img
+                      src={photo.src}
+                      alt={photo.caption}
+                      className="grad-polaroid-img"
+                      onError={(e) => {
+                        if (photo.id === 'dog') e.currentTarget.src = '/anconcho2.jpg';
+                      }}
+                    />
+                  </div>
+                  <span className="grad-polaroid-caption">{photo.caption}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Nút quay lại và nút sang trang Thư mời */}
@@ -120,6 +184,30 @@ export default function StageLetter({ onPrev, onNext }) {
           />
         </div>
       </div>
+
+      {/* Modal phóng to ảnh khi người dùng bấm vào một tấm hình Polaroid */}
+      {selectedPhoto && (
+        <div className="grad-lightbox-overlay" onClick={() => setSelectedPhoto(null)}>
+          <div className="grad-lightbox-card" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="grad-lightbox-close"
+              onClick={() => setSelectedPhoto(null)}
+              title="Đóng ảnh"
+            >
+              <X size={20} />
+            </button>
+            <img
+              src={selectedPhoto.src}
+              alt={selectedPhoto.caption}
+              className="grad-lightbox-img"
+            />
+            <div className="grad-lightbox-footer">
+              <span className="grad-lightbox-badge">🎓 {selectedPhoto.badge}</span>
+              <p className="grad-lightbox-caption">{selectedPhoto.caption}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

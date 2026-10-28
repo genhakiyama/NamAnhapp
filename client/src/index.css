@@ -346,8 +346,8 @@ body,
   height: 100% !important;
   max-width: none !important;
   max-height: none !important;
-  aspect-ratio: 640 / 820;
-  padding: 40px 34px 30px !important;
+  aspect-ratio: 720 / 890;
+  padding: 36px 32px 26px !important;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -357,10 +357,10 @@ body,
 
 .letter-title {
   font-family: var(--font-script);
-  font-size: 40px;
+  font-size: 38px;
   color: var(--title-color);
-  margin-top: 4px;
-  margin-bottom: 12px;
+  margin-top: 2px;
+  margin-bottom: 10px;
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
   flex-shrink: 0;
 }
@@ -371,34 +371,211 @@ body,
   min-height: 0;
   white-space: pre-wrap;
   text-align: left;
-  line-height: 1.78;
-  font-size: 16.5px;
+  line-height: 1.74;
+  font-size: 16px;
   font-weight: 500;
   color: #361d2b;
-  padding: 18px 22px;
+  padding: 16px 20px;
   overflow-y: auto;
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.62);
-  border: 1px solid rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.66);
+  border: 1px solid rgba(255, 255, 255, 0.8);
   box-shadow: inset 0 2px 8px rgba(40, 20, 30, 0.06);
 }
 
-.letter-photo-box {
+/* --- BỘ SƯU TẬP ẢNH PROFILE SẮP XẾP THEO KIỂU GRADUATION YEARBOOK / POLAROID --- */
+.grad-collage-section {
   width: 100%;
   display: flex;
-  justify-content: center;
-  margin-top: 14px;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 12px;
   margin-bottom: 12px;
   flex-shrink: 0;
 }
 
-.letter-photo-img {
-  width: 210px;
-  height: 155px;
-  border-radius: 18px;
-  box-shadow: 0 10px 26px rgba(70, 25, 40, 0.2);
+.grad-collage-ribbon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 18px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2d3464 0%, #424b8c 50%, #2d3464 100%);
+  border: 1.5px solid #f7d06b;
+  color: #ffe89e;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  box-shadow: 0 4px 12px rgba(30, 25, 60, 0.22);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.grad-polaroid-fan {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 4px 8px;
+}
+
+.grad-polaroid-card {
+  position: relative;
+  width: 118px;
+  background: #fffdf9;
+  padding: 6px 6px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(226, 105, 40, 0.25);
+  box-shadow: 0 8px 20px rgba(45, 20, 35, 0.18);
+  transform: rotate(var(--card-rotate, 0deg));
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, z-index 0s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  user-select: none;
+}
+
+.grad-polaroid-card:hover {
+  transform: translateY(-10px) scale(1.12) rotate(0deg);
+  box-shadow: 0 16px 32px rgba(45, 20, 35, 0.3);
+  z-index: 30;
+}
+
+.grad-mini-cap-badge {
+  position: absolute;
+  top: -12px;
+  left: -10px;
+  font-size: 20px;
+  transform: rotate(-16deg);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.22));
+  z-index: 4;
+}
+
+.grad-tag-pill {
+  position: absolute;
+  top: -8px;
+  right: 6px;
+  background: linear-gradient(135deg, #e87738, #d85f24);
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid #fff5eb;
+  box-shadow: 0 2px 6px rgba(226, 105, 40, 0.35);
+  letter-spacing: 0.3px;
+  z-index: 3;
+}
+
+.grad-polaroid-img-wrap {
+  width: 100%;
+  height: 112px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #ead7c8;
+  margin-bottom: 5px;
+}
+
+.grad-polaroid-img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border: 2.5px solid rgba(255, 255, 255, 0.8);
+  object-position: center 22%;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.grad-polaroid-card:hover .grad-polaroid-img {
+  transform: scale(1.06);
+}
+
+.grad-polaroid-caption {
+  font-family: var(--font-script);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #9e4216;
+  line-height: 1.15;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Modal phóng to ảnh Graduation khi nhấn vào */
+.grad-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(25, 14, 22, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: pop-in 0.25s ease;
+}
+
+.grad-lightbox-card {
+  position: relative;
+  background: #fffdf9;
+  padding: 14px 14px 18px;
+  border-radius: 20px;
+  max-width: min(440px, 90vw);
+  max-height: 86vh;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+  border: 2px solid #f7d06b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.grad-lightbox-close {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  background: #e26928;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.grad-lightbox-img {
+  width: 100%;
+  max-height: 66vh;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.grad-lightbox-footer {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.grad-lightbox-badge {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #ffe89e;
+  background: #2d3464;
+  padding: 3px 12px;
+  border-radius: 999px;
+}
+
+.grad-lightbox-caption {
+  font-family: var(--font-script);
+  font-size: 24px;
+  font-weight: 700;
+  color: #df6d28;
 }
 
 .letter-arrows {
@@ -406,7 +583,7 @@ body,
   gap: 14px;
   justify-content: center;
   align-items: center;
-  margin-top: 4px;
+  margin-top: 2px;
   z-index: 20;
   flex-shrink: 0;
 }
@@ -1028,18 +1205,18 @@ body,
   padding: 10px clamp(8px, 2vw, 24px);
 }
 
-/* --- CỘT TRÁI (LEFT PANEL): VIDEO 1 & 2 + POLAROID + MINI PLAYER --- */
+/* --- CỘT TRÁI (LEFT PANEL): VIDEO 1 -> 5 + POLAROID + MINI PLAYER --- */
 .final-left-decor {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 14px;
-  width: clamp(200px, 22vw, 260px);
+  width: clamp(220px, 24vw, 285px);
   z-index: 15;
   flex-shrink: 0;
 }
 
-/* Khung phát Video 1 & 2 */
+/* Khung phát Video 1 -> 5 */
 .final-video-box {
   width: 100%;
   border-radius: 18px;
@@ -1061,25 +1238,27 @@ body,
 
 .video-tabs-row {
   display: flex;
-  gap: 6px;
+  flex-wrap: wrap;
+  gap: 5px;
   justify-content: center;
 }
 
 .video-tab-btn {
-  flex: 1;
-  padding: 6px 10px;
+  flex: 1 1 calc(33.33% - 6px);
+  min-width: 72px;
+  padding: 5px 8px;
   border-radius: 999px;
   border: 1px solid rgba(226, 105, 40, 0.3);
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.78);
   color: #7b3e24;
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 3px;
   transition: all 0.2s ease;
 }
 
@@ -1522,18 +1701,62 @@ body,
   -webkit-backdrop-filter: blur(18px);
 }
 
-.admin-lock-badge {
-  width: 58px;
-  height: 58px;
+.admin-profile-avatar-wrap {
+  position: relative;
+  width: 118px;
+  height: 118px;
+  margin-top: 8px;
+  margin-bottom: 14px;
+  border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(135deg, #f7d06b, #e87738);
+  box-shadow: 0 10px 26px rgba(60, 25, 35, 0.22);
+}
+
+.admin-profile-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 30%;
+  border: 2.5px solid #ffffff;
+  display: block;
+}
+
+.admin-lock-mini-badge {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: linear-gradient(135deg, #e87738 0%, #d85f24 100%);
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 8px;
-  margin-bottom: 12px;
-  box-shadow: 0 8px 20px rgba(226, 105, 40, 0.35);
+  border: 2px solid #ffffff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.22);
+}
+
+.admin-vault-avatar-box {
+  width: 82px;
+  height: 82px;
+  margin: 0 auto 8px;
+  border-radius: 50%;
+  padding: 2.5px;
+  background: linear-gradient(135deg, #f7d06b, #e87738);
+  box-shadow: 0 8px 20px rgba(60, 25, 35, 0.18);
+}
+
+.admin-vault-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 30%;
+  border: 2px solid #ffffff;
+  display: block;
 }
 
 .admin-login-title {

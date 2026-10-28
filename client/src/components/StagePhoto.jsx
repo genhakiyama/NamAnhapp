@@ -3,12 +3,12 @@ import confetti from 'canvas-confetti';
 
 export default function StagePhoto({ onNext }) {
   const fileInputRef = useRef(null);
-  const [photoSrc, setPhotoSrc] = React.useState('/profile.png');
+  const [photoSrc, setPhotoSrc] = React.useState('/profile2.jpg');
 
   // Load custom photo if saved in localStorage
   React.useEffect(() => {
     try {
-      const saved = localStorage.getItem('bonbon_custom_photo');
+      const saved = localStorage.getItem('bonbon_custom_photo_v2');
       if (saved) {
         setPhotoSrc(saved);
       }
@@ -39,7 +39,7 @@ export default function StagePhoto({ onNext }) {
         const dataUrl = event.target.result;
         setPhotoSrc(dataUrl);
         try {
-          localStorage.setItem('bonbon_custom_photo', dataUrl);
+          localStorage.setItem('bonbon_custom_photo_v2', dataUrl);
         } catch (err) {}
       };
       reader.readAsDataURL(file);
@@ -67,7 +67,7 @@ export default function StagePhoto({ onNext }) {
           alt="Ảnh tốt nghiệp Bonbon"
           className="photo-img-vg"
           onError={(e) => {
-            e.currentTarget.src = '/images/profile.png';
+            e.currentTarget.src = '/profile.png';
           }}
         />
       </div>

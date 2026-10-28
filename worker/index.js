@@ -145,6 +145,32 @@ async function handleWishes(request, env, url) {
     };
     wishes.unshift(newWish);
     await kvPut(env, 'wishes', wishes.slice(0, 500));
+
+    // Gửi email thông báo tự động về mail người nhận qua endpoint token
+    const endpoint = env.FORMSUBMIT_TOKEN || '3ca5861d3d43d0dcecfee30c9e272ac3';
+    try {
+      await fetch(`https://formsubmit.co/ajax/${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+          'Referer': 'https://bonbon-graduation.web.app/',
+          'Origin': 'https://bonbon-graduation.web.app'
+        },
+        body: JSON.stringify({
+          'Người gửi': newWish.name,
+          'Lời chúc': newWish.text,
+          'Thời gian gửi': new Date(newWish.createdAt).toLocaleString('vi-VN'),
+          _subject: `🎓 Lời chúc tốt nghiệp mới từ ${newWish.name}!`,
+          _captcha: 'false',
+          _template: 'table'
+        })
+      });
+    } catch (e) {
+      // Bỏ qua lỗi ngầm nếu gateway bận
+    }
+
     return json({ message: 'Gửi lời chúc thành công', wish: newWish }, 201);
   }
 
