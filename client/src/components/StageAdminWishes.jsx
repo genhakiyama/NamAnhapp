@@ -176,7 +176,6 @@ export default function StageAdminWishes({ wishes = [], onDeleteWish, onBack }) 
                   <div className="admin-wish-card-top">
                     <div className="admin-wish-author-wrap">
                       <span className="admin-wish-number">#{wishes.length - idx}</span>
-                      <span className="admin-wish-author">{w.name || 'Người bạn thân mến'}</span>
                     </div>
                     <div className="admin-wish-meta">
                       {w.createdAt && (

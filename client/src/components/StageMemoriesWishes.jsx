@@ -274,7 +274,7 @@ export default function StageMemoriesWishes({
           </button>
         </form>
 
-        {/* Danh sách lời chúc đã gửi */}
+        {/* Danh sách lời chúc đã gửi (ẩn tên người gửi theo yêu cầu) */}
         <div id="list" className="wishes-stream-box">
           <h3 className="wishes-list-heading">Sổ lưu bút kỷ niệm 📖</h3>
           {wishes && wishes.length > 0 ? (
@@ -282,8 +282,7 @@ export default function StageMemoriesWishes({
               {wishes.map((w, index) => (
                 <div key={w.id || index} className="wish-item-card">
                   <div className="wish-header">
-                    <span className="wish-author">{w.name || 'Người bạn thân mến'}</span>
-                    <span className="wish-heart-icon">♡</span>
+                    <span className="wish-heart-icon">💌 Lời chúc gửi tặng Bonbon ♡</span>
                   </div>
                   <p className="wish-content">{w.text}</p>
                 </div>
