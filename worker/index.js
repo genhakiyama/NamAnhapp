@@ -5,6 +5,132 @@
 // Optional persistence: bind a KV namespace as GRAD_KV (see wrangler.toml).
 // Without KV, the API returns defaults and the client keeps data in localStorage.
 
+import nodemailer from 'nodemailer';
+
+function buildWishEmailHtml(wish) {
+  return `
+    <div style="font-family: Arial, sans-serif; padding: 24px; color: #333; max-width: 580px; margin: 0 auto; border: 1.5px solid #fed7aa; border-radius: 16px; background: #fffcf9; box-shadow: 0 4px 14px rgba(0,0,0,0.06);">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <h2 style="color: #e26928; margin: 0; font-size: 24px;">🎓 Có lời chúc tốt nghiệp mới dành cho Bonbon! 💌</h2>
+        <p style="color: #8c583a; font-size: 14px; margin-top: 6px;">Thời gian: ${new Date(wish.createdAt).toLocaleString('vi-VN')}</p>
+      </div>
+
+      <div style="background: #ffffff; padding: 18px 20px; border-left: 5px solid #e26928; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+        <p style="margin: 0 0 10px 0; font-size: 16px; font-weight: bold; color: #b94b15;">
+          Người gửi: <span style="color: #222;">${wish.name || 'Bạn ẩn danh'}</span>
+        </p>
+        <p style="margin: 0; font-size: 15px; line-height: 1.7; color: #333; white-space: pre-wrap;">${wish.text}</p>
+      </div>
+
+      <p style="font-size: 12px; color: #999; text-align: center; margin: 0;">
+        Thư thông báo tự động từ trang kỷ niệm tốt nghiệp Bonbon (Nam Anh) 🌸
+      </p>
+    </div>
+  `;
+}
+
+async function sendWishEmailFromWorker(wish, env) {
+  const rawReceiver = env.RECEIVER_EMAIL || 'bonnanguyen2004@gmail.com, sandundertailroal@gmail.com';
+  const emailUser = (env.EMAIL_USER || 'sandundertailroal@gmail.com').trim();
+  const emailPass = (env.EMAIL_PASS || 'fhsb mbea idhf jlbo').replace(/\s+/g, '');
+  const resendApiKey = (env.RESEND_API_KEY || '').trim();
+  const brevoApiKey = (env.BREVO_API_KEY || '').trim();
+
+  const recipients = Array.from(
+    new Set(
+      rawReceiver
+        .split(',')
+        .map((e) => e.trim())
+        .filter(Boolean)
+        .concat(emailUser ? [emailUser] : [])
+    )
+  );
+  const subject = `🎓 Lời chúc tốt nghiệp mới từ ${wish.name || 'Người bạn thân'}!`;
+  const html = buildWishEmailHtml(wish);
+
+  // 1. Gửi qua Resend REST API (HTTPS POST - chuẩn cho Cloudflare Worker nếu có RESEND_API_KEY)
+  if (resendApiKey) {
+    try {
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: env.RESEND_FROM || 'Bonbon Graduation <onboarding@resend.dev>',
+          to: recipients,
+          subject,
+          html
+        })
+      });
+      if (res.ok) {
+        const data = await res.json().catch(() => ({}));
+        return { sent: true, provider: 'resend-rest-api', id: data.id || null, to: recipients.join(', ') };
+      }
+    } catch (err) {
+      console.error('Resend REST API error:', err);
+    }
+  }
+
+  // 2. Gửi qua Brevo REST API (HTTPS POST - nếu có BREVO_API_KEY)
+  if (brevoApiKey) {
+    try {
+      const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'api-key': brevoApiKey,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          sender: { name: 'Thiệp Tốt Nghiệp Bonbon', email: emailUser },
+          to: recipients.map((email) => ({ email })),
+          subject,
+          htmlContent: html
+        })
+      });
+      if (res.ok) {
+        return { sent: true, provider: 'brevo-rest-api', to: recipients.join(', ') };
+      }
+    } catch (err) {
+      console.error('Brevo REST API error:', err);
+    }
+  }
+
+  // 3. Gửi qua Nodemailer với nodejs_compat trên Cloudflare Workers (Port 465 SSL)
+  if (emailUser && emailPass) {
+    try {
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+          user: emailUser,
+          pass: emailPass
+        },
+        connectionTimeout: 10000,
+        greetingTimeout: 10000,
+        socketTimeout: 15000
+      });
+
+      const info = await transporter.sendMail({
+        from: `"Thiệp Tốt Nghiệp Bonbon" <${emailUser}>`,
+        to: recipients.join(', '),
+        subject,
+        html
+      });
+
+      return { sent: true, provider: 'nodemailer-worker', messageId: info.messageId, to: recipients.join(', ') };
+    } catch (err) {
+      console.error('Worker Nodemailer error:', err);
+      return { sent: false, error: err.message };
+    }
+  }
+
+  return { sent: false, error: 'No email credentials configured' };
+}
+
 const DEFAULT_CONFIG = {
   general: {
     siteTitle: 'Mừng tốt nghiệp · Bonbon',
@@ -146,32 +272,20 @@ async function handleWishes(request, env, url) {
     wishes.unshift(newWish);
     await kvPut(env, 'wishes', wishes.slice(0, 500));
 
-    // Gửi email thông báo tự động về mail người nhận qua endpoint token
-    const endpoint = env.FORMSUBMIT_TOKEN || '3ca5861d3d43d0dcecfee30c9e272ac3';
-    try {
-      await fetch(`https://formsubmit.co/ajax/${endpoint}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
-          'Referer': 'https://bonbon-graduation.web.app/',
-          'Origin': 'https://bonbon-graduation.web.app'
-        },
-        body: JSON.stringify({
-          'Người gửi': newWish.name,
-          'Lời chúc': newWish.text,
-          'Thời gian gửi': new Date(newWish.createdAt).toLocaleString('vi-VN'),
-          _subject: `🎓 Lời chúc tốt nghiệp mới từ ${newWish.name}!`,
-          _captcha: 'false',
-          _template: 'table'
-        })
-      });
-    } catch (e) {
-      // Bỏ qua lỗi ngầm nếu gateway bận
-    }
+    // Gửi email thông báo tự động qua REST API / Worker Nodemailer
+    const emailResult = await sendWishEmailFromWorker(newWish, env);
 
-    return json({ message: 'Gửi lời chúc thành công', wish: newWish }, 201);
+    return json(
+      {
+        message: 'Gửi lời chúc thành công',
+        wish: newWish,
+        emailSent: emailResult.sent,
+        emailProvider: emailResult.provider || null,
+        emailTo: emailResult.to || null,
+        emailError: emailResult.error || null
+      },
+      201
+    );
   }
 
   if (request.method === 'DELETE') {

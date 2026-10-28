@@ -3,6 +3,14 @@
 name = "namanhapp"
 main = "worker/index.js"
 compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+RECEIVER_EMAIL = "bonnanguyen2004@gmail.com, sandundertailroal@gmail.com"
+EMAIL_USER = "sandundertailroal@gmail.com"
+EMAIL_PASS = "fhsb mbea idhf jlbo"
+# Nếu bạn dùng thêm Resend REST API thì điền key vào đây:
+RESEND_API_KEY = ""
 
 [assets]
 directory = "./client/dist"

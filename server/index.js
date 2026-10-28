@@ -66,6 +66,7 @@ async function sendNotificationEmail(wish) {
   const rawReceiver = process.env.RECEIVER_EMAIL || process.env.NOTIFICATION_EMAIL || 'bonnanguyen2004@gmail.com';
   const emailUser = (process.env.EMAIL_USER || 'sandundertailroal@gmail.com').trim();
   const emailPass = (process.env.EMAIL_PASS || '').replace(/\s+/g, '');
+  const resendApiKey = (process.env.RESEND_API_KEY || '').trim();
 
   // Gửi đồng thời tới cả RECEIVER_EMAIL trong .env và sandundertailroal@gmail.com để bạn kiểm tra hòm thư nào cũng thấy ngay
   const recipientsSet = new Set(
@@ -77,7 +78,54 @@ async function sendNotificationEmail(wish) {
   if (emailUser) {
     recipientsSet.add(emailUser);
   }
-  const targetEmail = Array.from(recipientsSet).join(', ');
+  const recipientsList = Array.from(recipientsSet);
+  const targetEmail = recipientsList.join(', ');
+  const subject = `🎓 Lời chúc tốt nghiệp mới từ ${wish.name || 'Người bạn thân'}!`;
+  const html = `
+    <div style="font-family: Arial, sans-serif; padding: 24px; color: #333; max-width: 580px; margin: 0 auto; border: 1.5px solid #fed7aa; border-radius: 16px; background: #fffcf9; box-shadow: 0 4px 14px rgba(0,0,0,0.06);">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <h2 style="color: #e26928; margin: 0; font-size: 24px;">🎓 Có lời chúc tốt nghiệp mới dành cho Bonbon! 💌</h2>
+        <p style="color: #8c583a; font-size: 14px; margin-top: 6px;">Thời gian: ${new Date(wish.createdAt).toLocaleString('vi-VN')}</p>
+      </div>
+
+      <div style="background: #ffffff; padding: 18px 20px; border-left: 5px solid #e26928; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+        <p style="margin: 0 0 10px 0; font-size: 16px; font-weight: bold; color: #b94b15;">
+          Người gửi: <span style="color: #222;">${wish.name || 'Bạn ẩn danh'}</span>
+        </p>
+        <p style="margin: 0; font-size: 15px; line-height: 1.7; color: #333; white-space: pre-wrap;">${wish.text}</p>
+      </div>
+
+      <p style="font-size: 12px; color: #999; text-align: center; margin: 0;">
+        Thư thông báo tự động từ trang kỷ niệm tốt nghiệp Bonbon (Nam Anh) 🌸
+      </p>
+    </div>
+  `;
+
+  // 1. Nếu có RESEND_API_KEY thì ưu tiên gửi qua Resend REST API
+  if (resendApiKey) {
+    try {
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: process.env.RESEND_FROM || 'Bonbon Graduation <onboarding@resend.dev>',
+          to: recipientsList,
+          subject,
+          html
+        })
+      });
+      if (res.ok) {
+        const data = await res.json().catch(() => ({}));
+        console.log(`✅ [Resend REST API] Gửi email thành công tới [${targetEmail}]!`);
+        return { sent: true, provider: 'resend-rest-api', messageId: data.id || null, to: targetEmail };
+      }
+    } catch (err) {
+      console.error('Resend API error:', err.message);
+    }
+  }
 
   console.log(`[Nodemailer] Đang gửi thông báo lời chúc tới: ${targetEmail}`);
 
